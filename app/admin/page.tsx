@@ -7,8 +7,10 @@ import { ProjectsManager } from '@/components/admin/projects-manager';
 import { ExperienceManager } from '@/components/admin/experience-manager';
 import { SocialManager } from '@/components/admin/social-manager';
 import { EmbedsManager } from '@/components/admin/embeds-manager';
+import { PageManager } from '@/components/admin/builder/PageManager';
+import { ObservabilityPanel } from '@/components/admin/ObservabilityPanel';
 import { Button } from '@/components/ui/button';
-import { Shield, Database, Briefcase, Users, Share2, Play, Terminal } from 'lucide-react';
+import { Shield, Database, Briefcase, Users, Share2, Play, Terminal, FileText, BarChart3 } from 'lucide-react';
 
 export default function AdminPanel() {
   const [activeTab, setActiveTab] = useState('overview');
@@ -57,10 +59,14 @@ export default function AdminPanel() {
         </div>
 
         <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
-          <TabsList className="grid w-full grid-cols-5 bg-gray-900">
+          <TabsList className="grid w-full grid-cols-7 bg-gray-900">
             <TabsTrigger value="overview" className="flex items-center gap-2">
               <Database className="h-4 w-4" />
               Overview
+            </TabsTrigger>
+            <TabsTrigger value="pages" className="flex items-center gap-2">
+              <FileText className="h-4 w-4" />
+              Pages
             </TabsTrigger>
             <TabsTrigger value="projects" className="flex items-center gap-2">
               <Briefcase className="h-4 w-4" />
@@ -77,6 +83,10 @@ export default function AdminPanel() {
             <TabsTrigger value="embeds" className="flex items-center gap-2">
               <Play className="h-4 w-4" />
               Embeds
+            </TabsTrigger>
+            <TabsTrigger value="observability" className="flex items-center gap-2">
+              <BarChart3 className="h-4 w-4" />
+              Monitor
             </TabsTrigger>
           </TabsList>
 
@@ -181,8 +191,16 @@ export default function AdminPanel() {
             <SocialManager />
           </TabsContent>
 
+          <TabsContent value="pages" className="mt-6">
+            <PageManager />
+          </TabsContent>
+
           <TabsContent value="embeds" className="mt-6">
             <EmbedsManager />
+          </TabsContent>
+
+          <TabsContent value="observability" className="mt-6">
+            <ObservabilityPanel />
           </TabsContent>
         </Tabs>
       </div>

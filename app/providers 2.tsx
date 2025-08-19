@@ -1,8 +1,7 @@
 'use client'
 
 import { NextIntlClientProvider } from 'next-intl'
-import { ReactNode, useEffect } from 'react'
-import { trackWebVitals } from '@/lib/vitals'
+import { ReactNode } from 'react'
 
 interface ProvidersProps {
   children: ReactNode
@@ -11,11 +10,6 @@ interface ProvidersProps {
 }
 
 export function Providers({ children, locale, messages }: ProvidersProps) {
-  useEffect(() => {
-    // Track web vitals on client side
-    trackWebVitals()
-  }, [])
-
   return (
     <NextIntlClientProvider locale={locale} messages={messages}>
       {children}
