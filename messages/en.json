@@ -1,0 +1,61 @@
+{
+  "common": {
+    "name": "Kadir",
+    "tagline": "Law student • AI & software projects • Content & fashion",
+    "cv": "Resume",
+    "contact": "Contact",
+    "email": "Email",
+    "language": "Language",
+    "turkish": "Türkçe",
+    "english": "English"
+  },
+  "home": {
+    "hero": {
+      "title": "Hi, I'm Kadir",
+      "subtitle": "Law student • AI & software projects • Content & fashion"
+    },
+    "about": {
+      "title": "About",
+      "readMore": "Read more",
+      "readLess": "Read less"
+    },
+    "skills": {
+      "title": "Skills"
+    },
+    "experience": {
+      "title": "Experience"
+    },
+    "projects": {
+      "title": "Projects",
+      "viewProject": "View Project",
+      "viewCode": "View Code"
+    },
+    "embeds": {
+      "title": "Content & Social"
+    },
+    "contact": {
+      "title": "Contact",
+      "name": "Name",
+      "email": "Email",
+      "message": "Message",
+      "send": "Send",
+      "sending": "Sending...",
+      "success": "Your message has been sent!",
+      "error": "An error occurred. Please try again."
+    }
+  },
+  "resume": {
+    "title": "Resume",
+    "download": "Download PDF",
+    "print": "Print",
+    "contact": "Contact",
+    "skills": "Skills",
+    "experience": "Experience",
+    "projects": "Projects"
+  },
+  "now": {
+    "title": "Now",
+    "subtitle": "What I'm up to",
+    "updated": "Last updated"
+  }
+}

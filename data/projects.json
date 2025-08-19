@@ -1,0 +1,19 @@
+[
+  {
+    "title": "Legal Decision Search Engine",
+    "stack": ["FastAPI", "React", "RAG"],
+    "summary": "Scrapes and indexes regulatory and case-law decisions with semantic search.",
+    "repo": "https://github.com/kadir/legal-search"
+  },
+  {
+    "title": "AI Tools for Legal Research",
+    "stack": ["Python", "LLM"],
+    "summary": "Assistive tooling for competition-law workflows."
+  },
+  {
+    "title": "Content & Fashion Mini-Portfolio",
+    "stack": ["Next.js", "Tailwind"],
+    "summary": "Selected looks and shoots.",
+    "href": "https://example.com/looks"
+  }
+]

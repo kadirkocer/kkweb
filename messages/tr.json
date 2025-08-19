@@ -1,0 +1,61 @@
+{
+  "common": {
+    "name": "Kadir",
+    "tagline": "Hukuk öğrencisi • AI & yazılım projeleri • İçerik & moda",
+    "cv": "CV",
+    "contact": "İletişim",
+    "email": "E-posta",
+    "language": "Dil",
+    "turkish": "Türkçe",
+    "english": "English"
+  },
+  "home": {
+    "hero": {
+      "title": "Merhaba, ben Kadir",
+      "subtitle": "Hukuk öğrencisi • AI & yazılım projeleri • İçerik & moda"
+    },
+    "about": {
+      "title": "Hakkımda",
+      "readMore": "Devamını oku",
+      "readLess": "Daha az göster"
+    },
+    "skills": {
+      "title": "Yetenekler"
+    },
+    "experience": {
+      "title": "Deneyim"
+    },
+    "projects": {
+      "title": "Projeler",
+      "viewProject": "Projeyi Görüntüle",
+      "viewCode": "Kodu Görüntüle"
+    },
+    "embeds": {
+      "title": "İçerik & Sosyal"
+    },
+    "contact": {
+      "title": "İletişim",
+      "name": "İsim",
+      "email": "E-posta",
+      "message": "Mesaj",
+      "send": "Gönder",
+      "sending": "Gönderiliyor...",
+      "success": "Mesajınız gönderildi!",
+      "error": "Bir hata oluştu. Lütfen tekrar deneyin."
+    }
+  },
+  "resume": {
+    "title": "CV",
+    "download": "PDF İndir",
+    "print": "Yazdır",
+    "contact": "İletişim",
+    "skills": "Yetenekler",
+    "experience": "Deneyim",
+    "projects": "Projeler"
+  },
+  "now": {
+    "title": "Şu Anda",
+    "subtitle": "Ne ile meşgulüm",
+    "updated": "Son güncelleme"
+  }
+}

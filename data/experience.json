@@ -1,0 +1,32 @@
+[
+  {
+    "role": "Legal Intern",
+    "organization": "Law Firm",
+    "mode": "Hybrid",
+    "period": "2025",
+    "highlights": [
+      "Competition law research",
+      "Case summaries",
+      "Document automation"
+    ]
+  },
+  {
+    "role": "Content Creator",
+    "organization": "YouTube",
+    "period": "2024–",
+    "highlights": [
+      "Vlogs and shorts",
+      "Publishing cadence strategy"
+    ]
+  },
+  {
+    "role": "AI/Legal Tooling Builder",
+    "organization": "Personal Projects",
+    "period": "2024–",
+    "highlights": [
+      "Scrapers (Requests/BS4)",
+      "FastAPI microservices",
+      "RAG prototypes"
+    ]
+  }
+]

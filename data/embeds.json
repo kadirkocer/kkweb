@@ -1,0 +1,26 @@
+[
+  {
+    "provider": "youtube",
+    "url": "https://www.youtube.com/@kkadirkocer",
+    "title": "Kadir Köçer YouTube Channel",
+    "description": "Law, tech, and lifestyle content"
+  },
+  {
+    "provider": "x",
+    "url": "https://x.com/kkadirkocer",
+    "title": "Latest tweets from @kkadirkocer",
+    "description": "Follow for updates on legal tech and AI"
+  },
+  {
+    "provider": "instagram",
+    "url": "https://www.instagram.com/kkadirkkocer",
+    "title": "Kadir on Instagram",
+    "description": "Fashion, lifestyle, and behind-the-scenes content"
+  },
+  {
+    "provider": "linkedin",
+    "url": "https://www.linkedin.com/in/kkadirkocer/",
+    "title": "Kadir Köçer on LinkedIn",
+    "description": "Professional updates and legal insights"
+  }
+]
