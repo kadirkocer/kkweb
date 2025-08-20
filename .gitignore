@@ -103,3 +103,9 @@ temp/
 *.njsproj
 *.sln
 *.sw?
+
+# Content policy: dev-only data files
+data/*.json
+
+# Additional build artifacts
+*.tsbuildinfo

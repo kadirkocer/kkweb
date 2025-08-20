@@ -84,7 +84,15 @@ function renderBlock(block: PageBlock, preview = false) {
 }
 
 export default async function DynamicPage({ params, searchParams }: PageProps) {
-  const isPreview = searchParams.preview === 'true'
+  const isPreview = searchParams.preview === 'true' || searchParams.draft === '1'
+  
+  // For preview mode, force dynamic rendering
+  if (isPreview) {
+    const { headers } = await import('next/headers')
+    // Force dynamic by accessing headers
+    headers()
+  }
+  
   const page = await getPageBySlug(params.slug, isPreview)
   
   if (!page) {
@@ -145,6 +153,30 @@ export async function generateMetadata({ params }: PageProps) {
   }
 }
 
-// For static generation, we could generate static paths here
-// but for now we'll use dynamic rendering
-export const dynamic = 'force-dynamic'
+// ISR configuration - static generation with revalidation
+export const dynamic = 'auto'
+export const revalidate = 60 // Revalidate every 60 seconds
+
+// Generate static paths for published pages
+export async function generateStaticParams() {
+  try {
+    // Only in dev/build - avoid storage calls in production
+    if (process.env.NODE_ENV === 'production' && process.env.CONTENT_STORAGE !== 'FILE') {
+      return []
+    }
+    
+    const storage = getStorage()
+    const pages = await storage.get<Page[]>('pages') || []
+    
+    // Only generate static paths for published pages
+    const publishedPages = pages.filter(page => page.status === 'published')
+    
+    return publishedPages.map(page => ({
+      slug: page.slug,
+    }))
+  } catch (error) {
+    // Graceful fallback - let dynamic rendering handle it
+    console.warn('Failed to generate static params:', error)
+    return []
+  }
+}

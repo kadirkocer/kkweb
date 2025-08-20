@@ -1,10 +1,52 @@
-# Migration Guide
+# Migration Guide - KKWeb v2.0.0
 
-This document explains how to extend the current storage adapter system to integrate with real databases or key-value stores for production use.
+This guide will help you migrate from the previous version to the new Court × Street × Pixel architecture with side-scroller presentation layer.
 
-## Current Architecture
+## 🔧 Required Environment Setup
 
-The project uses a storage adapter pattern located in `lib/storage.ts` that provides two implementations:
+### 1. Metrics Protection
+The metrics endpoint is now protected in production:
+
+```bash
+# Required for metrics access in production
+METRICS_ENABLED=true
+
+# Optional: Protect metrics with Basic Auth
+METRICS_BASIC=1
+ADMIN_USERNAME=your-admin-username
+ADMIN_PASSWORD=your-secure-password
+```
+
+### 2. Admin Authentication
+All admin APIs now require Basic Auth:
+
+```bash
+# Required for admin panel access
+ADMIN_USERNAME=your-admin-username
+ADMIN_PASSWORD=your-secure-password
+```
+
+### 3. Rate Limiting Configuration
+Optionally configure API rate limits:
+
+```bash
+# Default: 10 requests per second
+RATE_LIMIT=10rps
+
+# For higher traffic:
+RATE_LIMIT=50rps
+```
+
+### 4. Content Storage
+For development with file-based storage:
+
+```bash
+CONTENT_STORAGE=FILE
+```
+
+## 📁 Current Storage Architecture
+
+The project uses a storage adapter pattern located in `lib/storage.ts`:
 
 ### Development: FileStorage
 - **Environment**: `CONTENT_STORAGE=FILE`
@@ -30,6 +72,198 @@ export interface StorageAdapter {
 - `experience` - Work experience entries
 - `social` - Social media links
 - `embeds` - Social media embed configurations
+- `pages` - Dynamic pages with block content (NEW in v2.0.0)
+- `page_versions` - Version history for published pages (NEW in v2.0.0)
+
+## 🎨 New Theme System Migration
+
+### CSS Variables
+Import the new theme system in your app:
+
+```typescript
+// app/layout.tsx
+import '@/styles/theme.css'
+```
+
+### Tailwind Updates
+The Tailwind config now includes theme tokens:
+
+```typescript
+// Colors are now available as classes:
+className="bg-court-black text-ink border-gold"
+
+// Grid-based spacing:
+className="p-grid-4 gap-grid-2"
+
+// Theme-aware utilities:
+className="pixel-crisp box-mark stencil-label"
+```
+
+## 🎮 Side-Scroller Integration
+
+### Using the Stage Component
+Replace your main layout with the new Stage system:
+
+```tsx
+import { Stage } from '@/app/_ui/Stage'
+import { IntroScene, SkillsScene } from '@/app/_scenes'
+
+export default function HomePage() {
+  return (
+    <Stage>
+      <IntroScene />
+      <SkillsScene />
+      {/* Add other scenes */}
+    </Stage>
+  )
+}
+```
+
+### Scene Creation
+Create new scenes using the SceneBase:
+
+```tsx
+import { SceneBase, SceneConfig } from '@/app/_scenes/SceneBase'
+
+const mySceneConfig: SceneConfig = {
+  id: 'my-scene',
+  title: 'My Scene',
+  background: {
+    color: 'var(--court-black)',
+    texture: '/textures/grain.png',
+  },
+  pixelArt: {
+    sprites: [
+      {
+        id: 'my-sprite',
+        src: '/pixel/my-sprite.png',
+        width: 16,
+        height: 16,
+      }
+    ]
+  }
+}
+
+export function MyScene() {
+  return (
+    <SceneBase config={mySceneConfig}>
+      {/* Your content */}
+    </SceneBase>
+  )
+}
+```
+
+## 📄 Page Management & Versioning
+
+### ISR/SSG Configuration
+Published pages now use ISR with 60-second revalidation:
+
+```typescript
+// Automatically applied to app/[slug]/page.tsx
+export const revalidate = 60
+export const dynamic = 'auto'
+```
+
+### Preview Mode
+Draft pages can be previewed:
+
+```bash
+# Preview draft content
+https://yoursite.com/my-page?draft=1
+
+# Or preview parameter
+https://yoursite.com/my-page?preview=true
+```
+
+### Version History
+Existing pages will automatically generate version history on next publish:
+
+1. **No action needed** - versioning starts with next publish
+2. **Historical versions** - Only new versions are tracked
+3. **Rollback capability** - Restore any version to draft state
+
+## 🔒 Security Updates
+
+### Admin Panel Access
+All admin endpoints now require authentication:
+
+```bash
+# Set credentials in environment
+ADMIN_USERNAME=admin
+ADMIN_PASSWORD=secure-password-here
+
+# Access admin panel - browser will prompt for credentials
+# Or use API directly:
+curl -u admin:password /api/admin/pages
+```
+
+### Rate Limiting
+Admin APIs are rate-limited by IP:
+
+- **Default**: 10 requests per second
+- **Burst capacity**: 10x rate limit
+- **429 responses** include Retry-After header
+- **Configure with**: `RATE_LIMIT=20rps`
+
+## 📊 Observability & Monitoring
+
+### Health Checks
+The health endpoint now provides comprehensive status:
+
+```bash
+curl /api/health
+# Returns: status, uptime, storage, features, performance
+```
+
+### Metrics Access
+In production, metrics require explicit enabling:
+
+```bash
+# Development (always accessible)
+curl /api/metrics
+
+# Production (requires METRICS_ENABLED=true)
+curl /api/metrics
+# With Basic Auth if METRICS_BASIC=1:
+curl -u username:password /api/metrics
+```
+
+## 🖼️ Pixel Art Assets
+
+### Asset Structure
+Create the following directory structure:
+
+```
+public/
+├── pixel/
+│   ├── atlas.webp      # Main sprite sheet (512x512 recommended)
+│   ├── atlas.json      # Sprite coordinates and metadata
+│   └── individual/     # Individual sprite files
+└── textures/
+    └── grain.png       # 100x100px noise texture
+```
+
+### Atlas Format
+Use this JSON format for sprite atlases:
+
+```json
+{
+  "meta": {
+    "app": "kkweb-pixel-atlas",
+    "version": "1.0",
+    "image": "atlas.webp",
+    "size": { "w": 512, "h": 512 },
+    "scale": "2"
+  },
+  "frames": {
+    "sprite-name": {
+      "frame": { "x": 0, "y": 0, "w": 32, "h": 32 },
+      "sourceSize": { "w": 16, "h": 16 },
+      "spriteSourceSize": { "x": 0, "y": 0, "w": 16, "h": 16 }
+    }
+  }
+}
+```
 
 ## Adding Real Database Support
 

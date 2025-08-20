@@ -45,6 +45,9 @@ export async function GET() {
         admin: !!process.env.ADMIN_USERNAME,
         monitoring: true,
         telemetry: !process.env.TELEMETRY_DISABLED
+      },
+      env: {
+        metricsEnabled: process.env.METRICS_ENABLED === 'true'
       }
     })
   } catch (error) {

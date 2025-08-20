@@ -1,0 +1,313 @@
+/* Court × Street × Pixel Art Theme Tokens */
+:root {
+  /* Palette */
+  --court-black: #0B0C10;
+  --mid-panel: #121318;
+  --ink: #F6F7FB;
+  --muted: #9AA3AF;
+  --gold: #CBA35C;
+  --street-red: #D61F2C;
+  --pixel-sky: #3EC1F3;
+  --pixel-grass: #39B24A;
+  --pixel-soil: #6B4F3A;
+  --line: #1C1D22;
+  --focus: #E4C987;
+
+  /* Semantic color mapping */
+  --background: var(--court-black);
+  --foreground: var(--ink);
+  --primary: var(--gold);
+  --primary-foreground: var(--court-black);
+  --secondary: var(--mid-panel);
+  --secondary-foreground: var(--ink);
+  --accent: var(--street-red);
+  --accent-foreground: var(--ink);
+  --destructive: var(--street-red);
+  --destructive-foreground: var(--ink);
+  --muted: var(--muted);
+  --muted-foreground: #6B7280;
+  --border: var(--line);
+  --input: var(--mid-panel);
+  --ring: var(--focus);
+  --card: var(--mid-panel);
+  --card-foreground: var(--ink);
+  --popover: var(--mid-panel);
+  --popover-foreground: var(--ink);
+
+  /* Typography tokens */
+  --font-display: ui-serif, Georgia, 'Times New Roman', serif;
+  --font-body: ui-sans-serif, system-ui, -apple-system, 'Segoe UI', Roboto, Inter, sans-serif;
+  --font-pixel: 'Press Start 2P', 'VT323', ui-monospace, monospace;
+
+  /* Grid system */
+  --grid-base: 8px;
+  --pixel-scale: 2;
+
+  /* Motifs */
+  --box-mark-bg: var(--street-red);
+  --box-mark-fg: var(--ink);
+  --box-mark-radius: 2px;
+  --box-mark-padding-x: 8px;
+  --box-mark-padding-y: 4px;
+
+  --stencil-label-fg: var(--ink);
+  --stencil-label-border: 1px solid var(--line);
+  --stencil-label-spacing: 0.06em;
+
+  --gold-hairline-color: var(--gold);
+  --gold-hairline-thickness: 1px;
+
+  --grain-opacity: 0.06;
+
+  /* Animation tokens */
+  --duration-fast: 150ms;
+  --duration-normal: 300ms;
+  --duration-slow: 500ms;
+  --ease-cubic: cubic-bezier(0.33, 1, 0.68, 1);
+  --ease-quad-out: cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  --ease-quad-in-out: cubic-bezier(0.455, 0.03, 0.515, 0.955);
+  --ease-back-out: cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+/* Pixel rendering utilities */
+.pixel-crisp {
+  image-rendering: pixelated;
+  image-rendering: -moz-crisp-edges;
+  image-rendering: crisp-edges;
+}
+
+.pixel-snap {
+  transform: translateZ(0); /* Force hardware acceleration */
+}
+
+/* Box mark motif */
+.box-mark {
+  background: var(--box-mark-bg);
+  color: var(--box-mark-fg);
+  border-radius: var(--box-mark-radius);
+  padding: var(--box-mark-padding-y) var(--box-mark-padding-x);
+  font-weight: 600;
+  font-size: 0.875rem;
+  text-transform: uppercase;
+  letter-spacing: 0.025em;
+}
+
+/* Stencil label motif */
+.stencil-label {
+  color: var(--stencil-label-fg);
+  border: var(--stencil-label-border);
+  letter-spacing: var(--stencil-label-spacing);
+  font-family: var(--font-body);
+  font-weight: 500;
+  text-transform: uppercase;
+  padding: 0.5rem 1rem;
+  background: transparent;
+  transition: all var(--duration-normal) var(--ease-quad-out);
+}
+
+.stencil-label:hover {
+  background: var(--line);
+  transform: translateX(2px);
+}
+
+.stencil-label::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: var(--gold-hairline-thickness);
+  background: var(--gold-hairline-color);
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform var(--duration-normal) var(--ease-quad-out);
+}
+
+.stencil-label:hover::after {
+  transform: scaleX(1);
+}
+
+/* Gold hairline utility */
+.gold-hairline {
+  border-color: var(--gold-hairline-color);
+  border-width: var(--gold-hairline-thickness);
+}
+
+.gold-hairline-top {
+  border-top: var(--gold-hairline-thickness) solid var(--gold-hairline-color);
+}
+
+.gold-hairline-bottom {
+  border-bottom: var(--gold-hairline-thickness) solid var(--gold-hairline-color);
+}
+
+/* Focus ring utilities */
+.focus-ring {
+  outline: 2px solid transparent;
+  outline-offset: 2px;
+  transition: outline-color var(--duration-fast) var(--ease-quad-out);
+}
+
+.focus-ring:focus-visible {
+  outline-color: var(--ring);
+}
+
+/* Grid-based spacing utilities */
+.space-grid-1 { margin: calc(var(--grid-base) * 1); }
+.space-grid-2 { margin: calc(var(--grid-base) * 2); }
+.space-grid-3 { margin: calc(var(--grid-base) * 3); }
+.space-grid-4 { margin: calc(var(--grid-base) * 4); }
+.space-grid-6 { margin: calc(var(--grid-base) * 6); }
+.space-grid-8 { margin: calc(var(--grid-base) * 8); }
+
+.gap-grid-1 { gap: calc(var(--grid-base) * 1); }
+.gap-grid-2 { gap: calc(var(--grid-base) * 2); }
+.gap-grid-3 { gap: calc(var(--grid-base) * 3); }
+.gap-grid-4 { gap: calc(var(--grid-base) * 4); }
+.gap-grid-6 { gap: calc(var(--grid-base) * 6); }
+.gap-grid-8 { gap: calc(var(--grid-base) * 8); }
+
+/* Pixel art animation utilities */
+.pixel-run-cycle {
+  animation: pixel-run 0.6s steps(6) infinite;
+}
+
+@keyframes pixel-run {
+  0% { background-position-x: 0; }
+  100% { background-position-x: calc(-1 * 6 * 32px * var(--pixel-scale)); }
+}
+
+/* Reduced motion support */
+@media (prefers-reduced-motion: reduce) {
+  .pixel-run-cycle {
+    animation: none;
+  }
+  
+  .stencil-label {
+    transition: none;
+  }
+  
+  .stencil-label:hover {
+    transform: none;
+  }
+  
+  .stencil-label::after {
+    transition: none;
+  }
+}
+
+/* Grain texture overlay */
+.grain-overlay::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-image: url('/textures/grain.png');
+  background-repeat: repeat;
+  background-size: 100px 100px;
+  opacity: var(--grain-opacity);
+  pointer-events: none;
+  z-index: 1;
+}
+
+/* Stage and world layout */
+#stage {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  overflow: hidden;
+  background: var(--background);
+}
+
+#world {
+  position: absolute;
+  height: 100%;
+  will-change: transform;
+  min-width: 500vw; /* Wide world for side-scrolling */
+}
+
+/* Z-layer system for parallax */
+.layer-bg { z-index: 1; } /* Background/sky */
+.layer-far { z-index: 2; } /* Far background elements */
+.layer-mid { z-index: 3; } /* Mid-ground elements */
+.layer-near { z-index: 4; } /* Near foreground */
+.layer-fg { z-index: 5; } /* Foreground/character */
+.layer-ui { z-index: 10; } /* HUD elements */
+
+/* HUD components */
+.hud-box-mark {
+  position: fixed;
+  top: 1rem;
+  left: 1rem;
+  z-index: 10;
+}
+
+.hud-progress {
+  position: fixed;
+  bottom: 2rem;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 10;
+}
+
+.hud-scene-dots {
+  position: fixed;
+  right: 1rem;
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: 10;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.scene-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--muted);
+  transition: all var(--duration-normal) var(--ease-quad-out);
+}
+
+.scene-dot.active {
+  background: var(--gold);
+  transform: scale(1.5);
+}
+
+/* Nudge buttons for accessibility */
+.nudge-buttons {
+  position: fixed;
+  bottom: 1rem;
+  right: 1rem;
+  display: flex;
+  gap: 0.5rem;
+  z-index: 10;
+}
+
+.nudge-btn {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background: var(--mid-panel);
+  border: 1px solid var(--line);
+  color: var(--ink);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all var(--duration-fast) var(--ease-quad-out);
+}
+
+.nudge-btn:hover {
+  background: var(--gold);
+  color: var(--court-black);
+}
+
+.nudge-btn:focus-visible {
+  outline: 2px solid var(--ring);
+  outline-offset: 2px;
+}

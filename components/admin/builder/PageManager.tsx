@@ -15,8 +15,9 @@ import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, 
 import { Separator } from '@/components/ui/separator'
 import { BlockCanvas } from './BlockCanvas'
 import { BlockInspector } from './BlockInspector'
+import { VersionHistory } from './VersionHistory'
 import type { Page, PageBlock } from '@/components/admin/builder/BlockRegistry'
-import { Plus, Edit, Trash2, Eye, Globe, FileText, Calendar, Save } from 'lucide-react'
+import { Plus, Edit, Trash2, Eye, Globe, FileText, Calendar, Save, History } from 'lucide-react'
 import { cn } from '@/lib/utils'
 
 const pageFormSchema = z.object({
@@ -168,6 +169,31 @@ export function PageManager({ className }: PageManagerProps) {
     }
 
     await updatePage(updatedPage)
+  }
+
+  const handleVersionRestore = async (version: any) => {
+    try {
+      const response = await fetch('/api/admin/versions', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          pageId: selectedPage?.id,
+          action: 'restore',
+          versionId: version.id,
+        }),
+      })
+
+      if (response.ok) {
+        const restoredPage = await response.json()
+        setSelectedPage(restoredPage)
+        // Also update the pages list
+        setPages(prev => prev.map(p => p.id === restoredPage.id ? restoredPage : p))
+      } else {
+        console.error('Failed to restore version')
+      }
+    } catch (error) {
+      console.error('Failed to restore version:', error)
+    }
   }
 
   // Generate slug from title
@@ -401,6 +427,18 @@ export function PageManager({ className }: PageManagerProps) {
               >
                 {selectedPage.status} {selectedPage.version > 1 && `v${selectedPage.version}`}
               </Badge>
+              
+              <VersionHistory
+                pageId={selectedPage.id}
+                currentVersion={selectedPage.version}
+                onRestore={handleVersionRestore}
+                trigger={
+                  <Button variant="outline" size="sm" className="gap-2">
+                    <History className="h-3 w-3" />
+                    History
+                  </Button>
+                }
+              />
               
               {selectedPage.status === 'published' && (
                 <Button variant="outline" size="sm" asChild className="gap-2">

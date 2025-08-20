@@ -1,6 +1,9 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { z } from 'zod'
 import { getStorage, createStorageError } from '@/lib/storage'
+import { validateBasicAuth, createAuthResponse } from '@/lib/auth'
+import { checkRateLimit, createRateLimitResponse } from '@/lib/rate-limit'
+import { logError } from '@/instrumentation'
 import type { Page, PageBlock } from '@/components/admin/builder/BlockRegistry'
 
 const pageBlockSchema = z.object({
@@ -23,7 +26,31 @@ const updatePageSchema = pageSchema.extend({
   id: z.string(),
 })
 
-export async function GET() {
+// Authentication and rate limiting guard
+function checkAuth(request: NextRequest) {
+  try {
+    if (!validateBasicAuth(request)) {
+      return createAuthResponse('Admin')
+    }
+  } catch (error) {
+    return NextResponse.json({
+      error: 'Configuration error',
+      message: 'ADMIN_USERNAME and ADMIN_PASSWORD must be set',
+      requestId: crypto.randomUUID(),
+    }, { status: 500 })
+  }
+  
+  const rateLimitResult = checkRateLimit(request)
+  if (!rateLimitResult.allowed) {
+    return createRateLimitResponse(rateLimitResult.retryAfter || 60)
+  }
+  
+  return null
+}
+
+export async function GET(request: NextRequest) {
+  const authResult = checkAuth(request)
+  if (authResult) return authResult
   try {
     const storage = getStorage()
     const pages = await storage.get<Page[]>('pages') || []
@@ -47,6 +74,9 @@ export async function GET() {
 }
 
 export async function POST(request: NextRequest) {
+  const authResult = checkAuth(request)
+  if (authResult) return authResult
+  
   try {
     const storage = getStorage()
     const body = await request.json()
@@ -94,10 +124,12 @@ export async function POST(request: NextRequest) {
     }
     
     if (error instanceof z.ZodError) {
+      logError(error, { path: '/api/admin/pages', method: 'POST' }, 'block-validation')
       return NextResponse.json({
         error: 'Validation failed',
-        details: error.errors
-      }, { status: 400 })
+        details: error.errors,
+        requestId: crypto.randomUUID(),
+      }, { status: 422 })
     }
     
     console.error('Failed to create page:', error)
@@ -106,6 +138,9 @@ export async function POST(request: NextRequest) {
 }
 
 export async function PUT(request: NextRequest) {
+  const authResult = checkAuth(request)
+  if (authResult) return authResult
+  
   try {
     const storage = getStorage()
     const body = await request.json()
@@ -165,10 +200,12 @@ export async function PUT(request: NextRequest) {
     }
     
     if (error instanceof z.ZodError) {
+      logError(error, { path: '/api/admin/pages', method: 'POST' }, 'block-validation')
       return NextResponse.json({
         error: 'Validation failed',
-        details: error.errors
-      }, { status: 400 })
+        details: error.errors,
+        requestId: crypto.randomUUID(),
+      }, { status: 422 })
     }
     
     console.error('Failed to update page:', error)
@@ -177,6 +214,9 @@ export async function PUT(request: NextRequest) {
 }
 
 export async function DELETE(request: NextRequest) {
+  const authResult = checkAuth(request)
+  if (authResult) return authResult
+  
   try {
     const { searchParams } = new URL(request.url)
     const pageId = searchParams.get('id')

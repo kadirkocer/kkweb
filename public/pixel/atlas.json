@@ -1,0 +1,31 @@
+{
+  "meta": {
+    "app": "kkweb-pixel-atlas",
+    "version": "1.0",
+    "image": "atlas.webp",
+    "size": { "w": 512, "h": 512 },
+    "scale": "2"
+  },
+  "frames": {
+    "gavel": {
+      "frame": { "x": 0, "y": 0, "w": 32, "h": 32 },
+      "sourceSize": { "w": 16, "h": 16 },
+      "spriteSourceSize": { "x": 0, "y": 0, "w": 16, "h": 16 }
+    },
+    "scale": {
+      "frame": { "x": 32, "y": 0, "w": 32, "h": 32 },
+      "sourceSize": { "w": 16, "h": 16 },
+      "spriteSourceSize": { "x": 0, "y": 0, "w": 16, "h": 16 }
+    },
+    "avatar-run-1": {
+      "frame": { "x": 0, "y": 32, "w": 32, "h": 32 },
+      "sourceSize": { "w": 16, "h": 16 },
+      "spriteSourceSize": { "x": 0, "y": 0, "w": 16, "h": 16 }
+    },
+    "avatar-run-2": {
+      "frame": { "x": 32, "y": 32, "w": 32, "h": 32 },
+      "sourceSize": { "w": 16, "h": 16 },
+      "spriteSourceSize": { "x": 0, "y": 0, "w": 16, "h": 16 }
+    }
+  }
+}
