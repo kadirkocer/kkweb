@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { getStorage, createStorageError } from '@/lib/storage'
-import { validateBasicAuth, createAuthResponse } from '@/lib/auth'
-import { checkRateLimit, createRateLimitResponse } from '@/lib/rate-limit'
+import { withSecureAuth } from '@/lib/auth'
+import { withRateLimit, getClientIP } from '@/lib/rate-limit'
 
 interface PageVersion {
   id: string
@@ -14,32 +14,8 @@ interface PageVersion {
   author?: string
 }
 
-// Authentication and rate limiting guard
-function checkAuth(request: NextRequest) {
-  try {
-    if (!validateBasicAuth(request)) {
-      return createAuthResponse('Admin')
-    }
-  } catch (error) {
-    return NextResponse.json({
-      error: 'Configuration error',
-      message: 'ADMIN_USERNAME and ADMIN_PASSWORD must be set',
-      requestId: crypto.randomUUID(),
-    }, { status: 500 })
-  }
-  
-  const rateLimitResult = checkRateLimit(request)
-  if (!rateLimitResult.allowed) {
-    return createRateLimitResponse(rateLimitResult.retryAfter || 60)
-  }
-  
-  return null
-}
-
-export async function GET(request: NextRequest) {
-  const authResult = checkAuth(request)
-  if (authResult) return authResult
-
+// Secure GET handler
+const secureGET = withSecureAuth(async (request: NextRequest) => {
   try {
     const { searchParams } = new URL(request.url)
     const pageId = searchParams.get('pageId')
@@ -59,7 +35,11 @@ export async function GET(request: NextRequest) {
       .filter(v => v.pageId === pageId)
       .sort((a, b) => b.version - a.version)
     
-    return NextResponse.json(pageVersions)
+    const response = NextResponse.json(pageVersions)
+    response.headers.set('Cache-Control', 'private, no-cache, no-store, must-revalidate')
+    response.headers.set('X-Admin-Operation', 'read-versions')
+    
+    return response
   } catch (error) {
     if (error instanceof Error && error.message === 'Storage not implemented') {
       return NextResponse.json(
@@ -74,13 +54,20 @@ export async function GET(request: NextRequest) {
       requestId: crypto.randomUUID(),
     }, { status: 500 })
   }
-}
+})
 
-export async function POST(request: NextRequest) {
-  const authResult = checkAuth(request)
-  if (authResult) return authResult
-
+// Secure POST handler
+const securePOST = withSecureAuth(async (request: NextRequest) => {
   try {
+    // Validate Content-Type
+    const contentType = request.headers.get('content-type')
+    if (!contentType?.includes('application/json')) {
+      return NextResponse.json(
+        { error: 'Content-Type must be application/json' },
+        { status: 400 }
+      )
+    }
+    
     const body = await request.json()
     const { pageId, action } = body
 
@@ -115,7 +102,7 @@ export async function POST(request: NextRequest) {
       }
 
       // Get current pages
-      const pages = await storage.get('pages') || []
+      const pages = await storage.get<any[]>('pages') || []
       const pageIndex = pages.findIndex((p: any) => p.id === pageId)
       
       if (pageIndex === -1) {
@@ -139,7 +126,10 @@ export async function POST(request: NextRequest) {
       pages[pageIndex] = restoredPage
       await storage.set('pages', pages)
 
-      return NextResponse.json(restoredPage)
+      const response = NextResponse.json(restoredPage)
+      response.headers.set('X-Admin-Operation', 'restore-version')
+      
+      return response
     }
 
     return NextResponse.json(
@@ -160,4 +150,8 @@ export async function POST(request: NextRequest) {
       requestId: crypto.randomUUID(),
     }, { status: 500 })
   }
-}
+})
+
+// Apply rate limiting and export
+export const GET = withRateLimit(secureGET, 'admin')
+export const POST = withRateLimit(securePOST, 'admin')

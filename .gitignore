@@ -106,6 +106,16 @@ temp/
 
 # Content policy: dev-only data files
 data/*.json
+!data/.gitkeep
 
 # Additional build artifacts
 *.tsbuildinfo
+
+# Pixel art working files
+*.aseprite
+*.psd
+
+# KKWeb script files
+.kkweb.pid
+.kkweb.log
+.aider*

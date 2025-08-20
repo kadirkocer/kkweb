@@ -17,6 +17,11 @@
       "sourceSize": { "w": 16, "h": 16 },
       "spriteSourceSize": { "x": 0, "y": 0, "w": 16, "h": 16 }
     },
+    "avatar-idle": {
+      "frame": { "x": 64, "y": 0, "w": 32, "h": 32 },
+      "sourceSize": { "w": 16, "h": 16 },
+      "spriteSourceSize": { "x": 0, "y": 0, "w": 16, "h": 16 }
+    },
     "avatar-run-1": {
       "frame": { "x": 0, "y": 32, "w": 32, "h": 32 },
       "sourceSize": { "w": 16, "h": 16 },
@@ -24,6 +29,21 @@
     },
     "avatar-run-2": {
       "frame": { "x": 32, "y": 32, "w": 32, "h": 32 },
+      "sourceSize": { "w": 16, "h": 16 },
+      "spriteSourceSize": { "x": 0, "y": 0, "w": 16, "h": 16 }
+    },
+    "avatar-run-3": {
+      "frame": { "x": 64, "y": 32, "w": 32, "h": 32 },
+      "sourceSize": { "w": 16, "h": 16 },
+      "spriteSourceSize": { "x": 0, "y": 0, "w": 16, "h": 16 }
+    },
+    "avatar-run-4": {
+      "frame": { "x": 96, "y": 32, "w": 32, "h": 32 },
+      "sourceSize": { "w": 16, "h": 16 },
+      "spriteSourceSize": { "x": 0, "y": 0, "w": 16, "h": 16 }
+    },
+    "avatar-run-5": {
+      "frame": { "x": 128, "y": 32, "w": 32, "h": 32 },
       "sourceSize": { "w": 16, "h": 16 },
       "spriteSourceSize": { "x": 0, "y": 0, "w": 16, "h": 16 }
     }

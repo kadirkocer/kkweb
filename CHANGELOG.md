@@ -1,6 +1,6 @@
 # CHANGELOG
 
-## KKWeb v2.0.0 - Court × Street × Pixel Refactor
+## Security Hardening & Pixel Art Side-Scroller Implementation
 
 ### 🎨 **Theme System & Visual Identity**
 - **NEW**: Complete CSS variable-based theme system with court × street × pixel design tokens

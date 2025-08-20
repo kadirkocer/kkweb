@@ -14,6 +14,7 @@ interface PageProps {
   }
   searchParams: {
     preview?: string
+    draft?: string
   }
 }
 
@@ -84,52 +85,36 @@ function renderBlock(block: PageBlock, preview = false) {
 }
 
 export default async function DynamicPage({ params, searchParams }: PageProps) {
-  const isPreview = searchParams.preview === 'true' || searchParams.draft === '1'
+  const isDraft = searchParams.draft === '1';
   
-  // For preview mode, force dynamic rendering
-  if (isPreview) {
-    const { headers } = await import('next/headers')
-    // Force dynamic by accessing headers
-    headers()
+  // For draft mode, force dynamic rendering
+  if (isDraft) {
+    const { unstable_noStore } = await import('next/cache');
+    unstable_noStore();
   }
   
-  const page = await getPageBySlug(params.slug, isPreview)
+  const page = await getPageBySlug(params.slug, isDraft);
   
-  if (!page) {
-    notFound()
+  if (!page || (!isDraft && page.status !== 'published')) {
+    notFound();
   }
-  
-  // Sort blocks by order
-  const sortedBlocks = page.blocks.sort((a, b) => a.order - b.order)
-  
-  const nav = [
-    { href: '/', label: 'Home' },
-    { href: '/now', label: 'Now' },
-    { href: '/resume', label: 'Resume' }
-  ]
 
   return (
-    <div className="min-h-screen bg-background">
-      <Header 
-        title={siteConfig.name}
-        nav={nav}
-      />
-      
-      {isPreview && (
-        <div className="bg-yellow-100 border-b border-yellow-200 px-4 py-2 text-center">
-          <p className="text-yellow-800 text-sm">
-            🔍 <strong>Preview Mode</strong> - This page is not published yet
-          </p>
+    <div className="min-h-screen bg-court-black">
+      {isDraft && (
+        <div className="bg-gold text-court-black px-4 py-2 text-center">
+          Preview Mode
         </div>
       )}
       
-      <main id="main">
-        {sortedBlocks.map(block => renderBlock(block, isPreview))}
+      <main className="container mx-auto px-4 py-16">
+        <h1 className="text-4xl font-display text-ink mb-8">{page.title}</h1>
+        <div className="space-y-8">
+          {page.blocks.map((block, i) => renderBlock(block, isDraft))}
+        </div>
       </main>
-      
-      <Footer />
     </div>
-  )
+  );
 }
 
 // Generate metadata for SEO
@@ -154,8 +139,8 @@ export async function generateMetadata({ params }: PageProps) {
 }
 
 // ISR configuration - static generation with revalidation
-export const dynamic = 'auto'
-export const revalidate = 60 // Revalidate every 60 seconds
+export const dynamic = 'auto';
+export const revalidate = 60;
 
 // Generate static paths for published pages
 export async function generateStaticParams() {

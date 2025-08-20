@@ -1,0 +1,145 @@
+{
+  "meta": {
+    "app": "kkweb-pixel-atlas-extended",
+    "version": "2.0",
+    "image": "atlas.webp",
+    "size": { "w": 1024, "h": 1024 },
+    "scale": "2",
+    "description": "Complete pixel art atlas for Court × Street × Pixel theme"
+  },
+  "frames": {
+    "gavel": {
+      "frame": { "x": 0, "y": 0, "w": 32, "h": 32 },
+      "sourceSize": { "w": 16, "h": 16 },
+      "spriteSourceSize": { "x": 0, "y": 0, "w": 16, "h": 16 }
+    },
+    "scale": {
+      "frame": { "x": 32, "y": 0, "w": 32, "h": 32 },
+      "sourceSize": { "w": 16, "h": 16 },
+      "spriteSourceSize": { "x": 0, "y": 0, "w": 16, "h": 16 }
+    },
+    "gem": {
+      "frame": { "x": 64, "y": 0, "w": 32, "h": 32 },
+      "sourceSize": { "w": 16, "h": 16 },
+      "spriteSourceSize": { "x": 0, "y": 0, "w": 16, "h": 16 }
+    },
+    "tag": {
+      "frame": { "x": 96, "y": 0, "w": 32, "h": 32 },
+      "sourceSize": { "w": 16, "h": 16 },
+      "spriteSourceSize": { "x": 0, "y": 0, "w": 16, "h": 16 }
+    },
+    "avatar-idle": {
+      "frame": { "x": 0, "y": 32, "w": 32, "h": 32 },
+      "sourceSize": { "w": 16, "h": 16 },
+      "spriteSourceSize": { "x": 0, "y": 0, "w": 16, "h": 16 }
+    },
+    "avatar-run-1": {
+      "frame": { "x": 32, "y": 32, "w": 32, "h": 32 },
+      "sourceSize": { "w": 16, "h": 16 },
+      "spriteSourceSize": { "x": 0, "y": 0, "w": 16, "h": 16 }
+    },
+    "avatar-run-2": {
+      "frame": { "x": 64, "y": 32, "w": 32, "h": 32 },
+      "sourceSize": { "w": 16, "h": 16 },
+      "spriteSourceSize": { "x": 0, "y": 0, "w": 16, "h": 16 }
+    },
+    "avatar-run-3": {
+      "frame": { "x": 96, "y": 32, "w": 32, "h": 32 },
+      "sourceSize": { "w": 16, "h": 16 },
+      "spriteSourceSize": { "x": 0, "y": 0, "w": 16, "h": 16 }
+    },
+    "avatar-run-4": {
+      "frame": { "x": 128, "y": 32, "w": 32, "h": 32 },
+      "sourceSize": { "w": 16, "h": 16 },
+      "spriteSourceSize": { "x": 0, "y": 0, "w": 16, "h": 16 }
+    },
+    "avatar-run-5": {
+      "frame": { "x": 160, "y": 32, "w": 32, "h": 32 },
+      "sourceSize": { "w": 16, "h": 16 },
+      "spriteSourceSize": { "x": 0, "y": 0, "w": 16, "h": 16 }
+    },
+    "avatar-run-6": {
+      "frame": { "x": 192, "y": 32, "w": 32, "h": 32 },
+      "sourceSize": { "w": 16, "h": 16 },
+      "spriteSourceSize": { "x": 0, "y": 0, "w": 16, "h": 16 }
+    },
+    "court-pillar": {
+      "frame": { "x": 0, "y": 64, "w": 64, "h": 128 },
+      "sourceSize": { "w": 32, "h": 64 },
+      "spriteSourceSize": { "x": 0, "y": 0, "w": 32, "h": 64 }
+    },
+    "court-wall": {
+      "frame": { "x": 64, "y": 64, "w": 64, "h": 64 },
+      "sourceSize": { "w": 32, "h": 32 },
+      "spriteSourceSize": { "x": 0, "y": 0, "w": 32, "h": 32 }
+    },
+    "court-steps": {
+      "frame": { "x": 128, "y": 64, "w": 128, "h": 32 },
+      "sourceSize": { "w": 64, "h": 16 },
+      "spriteSourceSize": { "x": 0, "y": 0, "w": 64, "h": 16 }
+    },
+    "street-asphalt": {
+      "frame": { "x": 0, "y": 192, "w": 64, "h": 64 },
+      "sourceSize": { "w": 32, "h": 32 },
+      "spriteSourceSize": { "x": 0, "y": 0, "w": 32, "h": 32 }
+    },
+    "street-sidewalk": {
+      "frame": { "x": 64, "y": 192, "w": 64, "h": 64 },
+      "sourceSize": { "w": 32, "h": 32 },
+      "spriteSourceSize": { "x": 0, "y": 0, "w": 32, "h": 32 }
+    },
+    "street-gutter": {
+      "frame": { "x": 128, "y": 192, "w": 64, "h": 32 },
+      "sourceSize": { "w": 32, "h": 16 },
+      "spriteSourceSize": { "x": 0, "y": 0, "w": 32, "h": 16 }
+    },
+    "terminal-bg": {
+      "frame": { "x": 0, "y": 256, "w": 128, "h": 96 },
+      "sourceSize": { "w": 64, "h": 48 },
+      "spriteSourceSize": { "x": 0, "y": 0, "w": 64, "h": 48 }
+    },
+    "terminal-border": {
+      "frame": { "x": 128, "y": 256, "w": 128, "h": 96 },
+      "sourceSize": { "w": 64, "h": 48 },
+      "spriteSourceSize": { "x": 0, "y": 0, "w": 64, "h": 48 }
+    },
+    "terminal-cursor": {
+      "frame": { "x": 256, "y": 256, "w": 16, "h": 32 },
+      "sourceSize": { "w": 8, "h": 16 },
+      "spriteSourceSize": { "x": 0, "y": 0, "w": 8, "h": 16 }
+    },
+    "city-building-1": {
+      "frame": { "x": 0, "y": 352, "w": 128, "h": 256 },
+      "sourceSize": { "w": 64, "h": 128 },
+      "spriteSourceSize": { "x": 0, "y": 0, "w": 64, "h": 128 }
+    },
+    "city-building-2": {
+      "frame": { "x": 128, "y": 352, "w": 96, "h": 192 },
+      "sourceSize": { "w": 48, "h": 96 },
+      "spriteSourceSize": { "x": 0, "y": 0, "w": 48, "h": 96 }
+    },
+    "city-building-3": {
+      "frame": { "x": 224, "y": 352, "w": 160, "h": 320 },
+      "sourceSize": { "w": 80, "h": 160 },
+      "spriteSourceSize": { "x": 0, "y": 0, "w": 80, "h": 160 }
+    }
+  },
+  "layers": {
+    "background": {
+      "description": "Far background elements (factor: 0.1-0.2)",
+      "sprites": ["city-building-1", "city-building-2", "city-building-3"]
+    },
+    "midground": {
+      "description": "Mid-distance elements (factor: 0.3-0.6)",
+      "sprites": ["court-pillar", "court-wall", "terminal-bg"]
+    },
+    "foreground": {
+      "description": "Interactive and character elements (factor: 0.8-1.0)",
+      "sprites": ["avatar-idle", "avatar-run-1", "gavel", "scale", "gem", "tag"]
+    },
+    "ground": {
+      "description": "Ground and platform tiles (factor: 1.0)",
+      "sprites": ["street-asphalt", "street-sidewalk", "court-steps"]
+    }
+  }
+}

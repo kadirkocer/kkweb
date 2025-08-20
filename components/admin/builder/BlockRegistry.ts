@@ -223,6 +223,7 @@ export interface PageVersion {
   blocks: PageBlock[]
   createdAt: string
   publishedAt?: string
+  author?: string
 }
 
 // Export schemas for API validation

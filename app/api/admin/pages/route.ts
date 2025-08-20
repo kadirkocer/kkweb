@@ -1,30 +1,36 @@
-import { NextRequest, NextResponse } from 'next/server'
-import { z } from 'zod'
-import { getStorage, createStorageError } from '@/lib/storage'
-import { validateBasicAuth, createAuthResponse } from '@/lib/auth'
-import { checkRateLimit, createRateLimitResponse } from '@/lib/rate-limit'
-import { logError } from '@/instrumentation'
-import type { Page, PageBlock } from '@/components/admin/builder/BlockRegistry'
+import { NextRequest, NextResponse } from 'next/server';
+import { z } from 'zod';
+import { checkRateLimit, createRateLimitResponse } from '@/lib/rate-limit';
+import { getStorage, createStorageError } from '@/lib/storage';
+import { validateBasicAuth, createAuthResponse } from '@/lib/auth';
+import { nanoid } from 'nanoid';
+import { type Page, type PageBlock, type PageVersion } from '@/components/admin/builder/BlockRegistry';
 
-const pageBlockSchema = z.object({
+const PageSchema = z.object({
+  slug: z.string(),
+  title: z.string(),
+  blocks: z.array(z.object({ type: z.string(), props: z.record(z.any()) })),
+  status: z.enum(['draft', 'published']),
+  metadata: z.object({ 
+    author: z.string().optional(), 
+    publishedAt: z.string().optional(),
+    description: z.string().optional()
+  }).optional()
+});
+
+const updatePageSchema = z.object({
   id: z.string(),
-  type: z.string(),
-  props: z.record(z.any()),
-  order: z.number(),
-})
-
-const pageSchema = z.object({
-  id: z.string().optional(),
-  slug: z.string().min(1).regex(/^[a-z0-9-]+$/, 'Slug can only contain lowercase letters, numbers, and hyphens'),
-  title: z.string().min(1),
+  slug: z.string(),
+  title: z.string(),
   description: z.string().optional(),
-  status: z.enum(['draft', 'published']).default('draft'),
-  blocks: z.array(pageBlockSchema).default([]),
-})
-
-const updatePageSchema = pageSchema.extend({
-  id: z.string(),
-})
+  status: z.enum(['draft', 'published']),
+  blocks: z.array(z.object({
+    id: z.string(),
+    type: z.string(),
+    props: z.record(z.any()),
+    order: z.number()
+  }))
+});
 
 // Authentication and rate limiting guard
 function checkAuth(request: NextRequest) {
@@ -34,106 +40,99 @@ function checkAuth(request: NextRequest) {
     }
   } catch (error) {
     return NextResponse.json({
-      error: 'Configuration error',
+      error: 'Configuration error', 
       message: 'ADMIN_USERNAME and ADMIN_PASSWORD must be set',
       requestId: crypto.randomUUID(),
     }, { status: 500 })
   }
   
-  const rateLimitResult = checkRateLimit(request)
-  if (!rateLimitResult.allowed) {
-    return createRateLimitResponse(rateLimitResult.retryAfter || 60)
+  const clientIP = request.headers.get('x-forwarded-for') || request.headers.get('x-real-ip') || 'unknown'
+  if (!checkRateLimit(clientIP)) {
+    return createRateLimitResponse(60)
   }
   
   return null
 }
 
-export async function GET(request: NextRequest) {
-  const authResult = checkAuth(request)
-  if (authResult) return authResult
-  try {
-    const storage = getStorage()
-    const pages = await storage.get<Page[]>('pages') || []
-    
-    // Return pages sorted by updated date
-    const sortedPages = pages.sort((a, b) => 
-      new Date(b.updatedAt).getTime() - new Date(a.updatedAt).getTime()
-    )
-    
-    return NextResponse.json(sortedPages)
-  } catch (error) {
-    if (error instanceof Error && error.message === 'Storage not implemented') {
-      return NextResponse.json(
-        createStorageError('read', 'Use CONTENT_STORAGE=FILE in development.'),
-        { status: 501 }
-      )
-    }
-    console.error('Failed to read pages:', error)
-    return NextResponse.json({ error: 'Failed to read pages' }, { status: 500 })
-  }
+// Helper function to log errors with context
+function logError(error: any, context: any, category: string = 'general') {
+  console.error(`[${category}] Error in ${context.path} (${context.method}):`, error)
 }
 
 export async function POST(request: NextRequest) {
-  const authResult = checkAuth(request)
-  if (authResult) return authResult
+  const ip = request.ip || 'unknown'; 
+  if (!checkRateLimit(ip)) { 
+    return NextResponse.json({ error: 'Rate limit exceeded', retryAfter: 1000 }, { status: 429 }); 
+  }
   
+  const requestId = nanoid();
   try {
-    const storage = getStorage()
-    const body = await request.json()
-    const validatedPage = pageSchema.parse(body)
+    const body = await request.json(); 
+    const validated = PageSchema.parse(body); 
+    const storage = getStorage();
     
-    // Get existing pages
+    if (validated.status === 'published') {
+      const pages = await storage.get<Page[]>('pages') || []
+      const existing = pages.find(p => p.slug === validated.slug)
+      if (existing) { 
+        const versions = await storage.get<PageVersion[]>('page_versions') || []
+        versions.push({
+          id: nanoid(),
+          pageId: existing.id,
+          version: existing.version,
+          title: existing.title,
+          blocks: existing.blocks,
+          createdAt: new Date().toISOString(),
+          publishedAt: existing.publishedAt,
+          author: validated.metadata?.author || 'system'
+        })
+        await storage.set('page_versions', versions)
+      }
+      validated.metadata = { ...validated.metadata, publishedAt: new Date().toISOString() };
+    }
+    
     const pages = await storage.get<Page[]>('pages') || []
-    
-    // Check if slug already exists
-    const existingPage = pages.find(p => p.slug === validatedPage.slug)
-    if (existingPage) {
-      return NextResponse.json(
-        { error: 'A page with this slug already exists' },
-        { status: 400 }
-      )
-    }
-    
-    // Create new page
+    const pageIndex = pages.findIndex(p => p.slug === validated.slug)
     const newPage: Page = {
-      id: crypto.randomUUID(),
-      ...validatedPage,
-      blocks: validatedPage.blocks || [],
-      createdAt: new Date().toISOString(),
+      id: pageIndex >= 0 ? pages[pageIndex].id : nanoid(),
+      slug: validated.slug,
+      title: validated.title,
+      description: validated.metadata?.description,
+      status: validated.status,
+      blocks: validated.blocks.map((block, i) => ({
+        id: nanoid(),
+        type: block.type,
+        props: block.props,
+        order: i
+      })),
+      createdAt: pageIndex >= 0 ? pages[pageIndex].createdAt : new Date().toISOString(),
       updatedAt: new Date().toISOString(),
-      publishedAt: validatedPage.status === 'published' ? new Date().toISOString() : undefined,
-      version: 1,
+      publishedAt: validated.metadata?.publishedAt,
+      version: pageIndex >= 0 ? pages[pageIndex].version + 1 : 1
     }
     
-    // Add to pages array
-    pages.push(newPage)
+    if (pageIndex >= 0) {
+      pages[pageIndex] = newPage
+    } else {
+      pages.push(newPage)
+    }
     await storage.set('pages', pages)
     
-    // If publishing, create version snapshot
-    if (newPage.status === 'published') {
-      await createVersionSnapshot(storage, newPage)
+    if (validated.status === 'published') {
+      await fetch(`${process.env.NEXT_PUBLIC_SITE_URL}/api/revalidate`, { 
+        method: 'POST', 
+        headers: { 'x-revalidate-token': process.env.REVALIDATE_TOKEN! }, 
+        body: JSON.stringify({ path: `/${validated.slug}` }) 
+      });
     }
     
-    return NextResponse.json(newPage, { status: 201 })
+    return NextResponse.json({ success: true, slug: validated.slug, requestId });
   } catch (error) {
-    if (error instanceof Error && error.message === 'Storage not implemented') {
-      return NextResponse.json(
-        createStorageError('write', 'Use CONTENT_STORAGE=FILE in development.'),
-        { status: 501 }
-      )
+    if (error instanceof z.ZodError) { 
+      return NextResponse.json({ error: 'Validation failed', details: error.errors, requestId }, { status: 422 }); 
     }
-    
-    if (error instanceof z.ZodError) {
-      logError(error, { path: '/api/admin/pages', method: 'POST' }, 'block-validation')
-      return NextResponse.json({
-        error: 'Validation failed',
-        details: error.errors,
-        requestId: crypto.randomUUID(),
-      }, { status: 422 })
-    }
-    
-    console.error('Failed to create page:', error)
-    return NextResponse.json({ error: 'Failed to create page' }, { status: 500 })
+    console.error(`[${requestId}] Error:`, error);
+    return NextResponse.json({ error: 'Internal server error', requestId }, { status: 500 });
   }
 }
 

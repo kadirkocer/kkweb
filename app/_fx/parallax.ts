@@ -89,9 +89,14 @@ export class ParallaxEngine {
 }
 
 // Specific transform utilities
-export function pixelSnap(value: number, pixelScale: number = 2): number {
-  const gridSize = 8 / pixelScale
-  return Math.round(value / gridSize) * gridSize
+export function pixelSnap(value: number, gridSize: number = 8): number {
+  return Math.round(value / gridSize) * gridSize;
+}
+
+export function calculateParallax(t: number, worldWidth: number, layerFactor: number = 1): string {
+  const x = -t * worldWidth * layerFactor; 
+  const snappedX = pixelSnap(x, 4); 
+  return `translate3d(${snappedX}px, 0, 0)`;
 }
 
 export function createPixelTransform(

@@ -23,6 +23,27 @@ interface BlockInspectorProps {
 }
 
 export function BlockInspector({ block, onBlockChange, onClose, className }: BlockInspectorProps) {
+  // Initialize form first - hooks must be called unconditionally
+  const form = useForm({
+    defaultValues: block?.props || {},
+  })
+
+  // Update form when block changes
+  useEffect(() => {
+    if (block?.props) {
+      form.reset(block.props)
+    }
+  }, [block?.id, block?.props, form])
+
+  const onSubmit = (data: any) => {
+    if (block) {
+      onBlockChange({
+        ...block,
+        props: data
+      })
+    }
+  }
+
   if (!block) {
     return (
       <Card className={cn('h-fit', className)}>
@@ -62,22 +83,6 @@ export function BlockInspector({ block, onBlockChange, onClose, className }: Blo
         </CardContent>
       </Card>
     )
-  }
-
-  const form = useForm({
-    defaultValues: block.props,
-  })
-
-  // Update form when block changes
-  useEffect(() => {
-    form.reset(block.props)
-  }, [block.id, block.props, form])
-
-  const onSubmit = (data: any) => {
-    onBlockChange({
-      ...block,
-      props: data
-    })
   }
 
   const renderField = (fieldName: string, value: any) => {

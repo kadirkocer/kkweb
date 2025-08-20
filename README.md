@@ -20,36 +20,52 @@ A modern, accessible, and performant personal website built with Next.js 14, fea
 - Node.js 18+ and pnpm (or npm)
 - Git
 
-### Installation
+### One-Command Setup & Start
 
-1. **Clone and install dependencies**:
-   ```bash
-   git clone <repository-url>
-   cd kkweb
-   pnpm install
-   ```
+The easiest way to get started is with the KKWeb development manager:
 
-2. **Set up environment variables**:
-   ```bash
-   cp .env.local.example .env.local
-   # Edit .env.local with your values
-   ```
+```bash
+git clone <repository-url>
+cd kkweb
+./kkweb
+```
 
-3. **Run the development server**:
-   ```bash
-   pnpm dev
-   ```
+**That's it!** The script automatically:
+- ✅ Installs all dependencies
+- ✅ Sets up environment variables
+- ✅ Runs health checks  
+- ✅ Starts the development server
+- ✅ Opens all access points
 
-4. **Open http://localhost:3000** to see the site
+**Access Points:**
+- 🌐 **Website**: http://localhost:3000
+- 🔧 **Admin Panel**: http://localhost:3000/admin (admin/kkweb2024)
+- 🎮 **Interactive**: http://localhost:3000/interactive
 
-## 🛠️ Scripts
+### Manual Setup (Alternative)
 
-- `pnpm dev` - Start development server
-- `pnpm build` - Build for production
-- `pnpm start` - Start production server
-- `pnpm lint` - Run ESLint
-- `pnpm typecheck` - Run TypeScript checks
-- `pnpm format` - Format code with Prettier
+If you prefer manual setup:
+
+1. **Install dependencies**: `pnpm install`
+2. **Copy environment**: `cp .env.example .env.local`
+3. **Start server**: `pnpm dev`
+
+**📖 For detailed script usage, see [KKWEB_SCRIPT.md](./KKWEB_SCRIPT.md)**
+
+## 🛠️ Development Scripts
+
+### KKWeb Manager (Recommended)
+- `./kkweb` or `npm run dev` - Start complete development environment
+- `./kkweb stop` or `npm run stop` - Stop all services  
+- `./kkweb status` or `npm run status` - Check if running
+- `./kkweb health` or `npm run health` - Run health checks
+
+### Traditional Commands
+- `npm run build` - Build for production
+- `npm run prod` - Start production server
+- `npm run lint` - Run ESLint
+- `npm run typecheck` - Run TypeScript checks  
+- `npm run format` - Format code with Prettier
 
 ## 📁 Project Structure
 

@@ -141,6 +141,11 @@ export default async function HomePage() {
           {/* Quick Links */}
           <section>
             <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
+              <Button asChild size="lg" variant="outline" className="box-mark border-gold text-gold hover:bg-gold hover:text-court-black">
+                <Link href="/interactive">
+                  🎮 Interactive Experience
+                </Link>
+              </Button>
               <Button asChild size="lg">
                 <Link href={`mailto:${siteConfig.contactEmail}`}>
                   {tCommon('email')}

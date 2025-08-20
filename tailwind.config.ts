@@ -89,6 +89,8 @@ const config: Config = {
       animation: {
         'accordion-down': 'accordion-down 0.2s ease-out',
         'accordion-up': 'accordion-up 0.2s ease-out',
+        'pixel-bounce': 'pixelBounce 0.6s ease-in-out infinite',
+        'stencil-slide': 'stencilSlide 0.3s ease-out'
       },
       keyframes: {
         'accordion-down': {
@@ -99,6 +101,14 @@ const config: Config = {
           from: { height: 'var(--radix-accordion-content-height)' },
           to: { height: '0' },
         },
+        pixelBounce: { 
+          '0%, 100%': { transform: 'translateY(0)' }, 
+          '50%': { transform: 'translateY(-8px)' } 
+        },
+        stencilSlide: { 
+          '0%': { transform: 'translateX(-8px)', opacity: '0' }, 
+          '100%': { transform: 'translateX(0)', opacity: '1' } 
+        }
       },
     },
   },

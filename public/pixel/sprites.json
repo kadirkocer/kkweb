@@ -1,0 +1,85 @@
+{
+  "meta": {
+    "app": "kkweb-sprite-definitions",
+    "version": "1.0",
+    "description": "Sprite animation definitions for pixel art assets"
+  },
+  "animations": {
+    "avatar-run": {
+      "frames": ["avatar-run-1", "avatar-run-2", "avatar-run-3", "avatar-run-4", "avatar-run-5", "avatar-run-6"],
+      "duration": 600,
+      "loop": true
+    },
+    "gavel-bounce": {
+      "frames": ["gavel"],
+      "duration": 2000,
+      "loop": true,
+      "transform": {
+        "type": "bounce",
+        "amplitude": 8,
+        "frequency": 1
+      }
+    },
+    "scale-sway": {
+      "frames": ["scale"],
+      "duration": 3000,
+      "loop": true,
+      "transform": {
+        "type": "sway",
+        "amplitude": 2,
+        "frequency": 0.5
+      }
+    }
+  },
+  "collectibles": {
+    "gavel-gold": {
+      "sprite": "gavel",
+      "rarity": "legendary",
+      "points": 100,
+      "description": "Golden Gavel - Symbol of legal authority"
+    },
+    "scale-gold": {
+      "sprite": "scale",
+      "rarity": "legendary", 
+      "points": 100,
+      "description": "Golden Scales - Symbol of justice and balance"
+    },
+    "code-gem": {
+      "sprite": "gem",
+      "rarity": "rare",
+      "points": 50,
+      "description": "Code Gem - Crystallized programming knowledge"
+    },
+    "street-tag": {
+      "sprite": "tag",
+      "rarity": "common",
+      "points": 25,
+      "description": "Street Tag - Urban creativity marker"
+    }
+  },
+  "characters": {
+    "kadir-avatar": {
+      "idle": ["avatar-idle"],
+      "run": "avatar-run",
+      "size": { "w": 16, "h": 16 },
+      "hitbox": { "w": 12, "h": 16, "offset": { "x": 2, "y": 0 } }
+    }
+  },
+  "environments": {
+    "courthouse": {
+      "tiles": ["court-wall", "court-pillar", "court-steps"],
+      "width": 192,
+      "height": 128
+    },
+    "street": {
+      "tiles": ["street-asphalt", "street-sidewalk", "street-gutter"],
+      "width": 256,
+      "height": 64
+    },
+    "code-terminal": {
+      "tiles": ["terminal-bg", "terminal-border", "terminal-cursor"],
+      "width": 128,
+      "height": 96
+    }
+  }
+}

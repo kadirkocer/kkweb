@@ -1,0 +1,6 @@
+#!/bin/bash
+
+# KKWeb Quick Access Script
+# Simple wrapper for the main kkweb.sh script
+
+./scripts/kkweb.sh "$@"

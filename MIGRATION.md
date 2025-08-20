@@ -1,6 +1,8 @@
-# Migration Guide - KKWeb v2.0.0
+# MIGRATION GUIDE
 
-This guide will help you migrate from the previous version to the new Court × Street × Pixel architecture with side-scroller presentation layer.
+## Next.js 14 Security Hardening & Pixel Art Side-Scroller
+
+This guide covers migrating to the new security-hardened architecture with Basic Auth, rate limiting, ISR/SSG support, and the court × street × pixel side-scrolling experience.
 
 ## 🔧 Required Environment Setup
 

@@ -3,6 +3,7 @@
 import { SceneBase, SceneConfig, useSceneAnimation } from './SceneBase'
 import { useSideScrollerStore } from '@/app/_state/store'
 import { useEffect, useRef } from 'react'
+import { GoldenGavel, AvatarIdle } from '@/components/PixelSprite'
 
 const introConfig: SceneConfig = {
   id: 'intro',
@@ -28,23 +29,19 @@ const introConfig: SceneConfig = {
             {/* Pixelated courthouse silhouette */}
             <div className="absolute inset-x-0 top-4 h-8 bg-line" />
             <div className="absolute left-1/2 -translate-x-1/2 top-0 w-4 h-4 bg-gold" />
+            
+            {/* Add courthouse background image */}
+            <div 
+              className="absolute inset-0 opacity-60"
+              style={{
+                backgroundImage: 'url(/pixel/city-bg.webp)',
+                backgroundSize: 'cover',
+                backgroundPosition: 'center bottom',
+                imageRendering: 'pixelated'
+              }}
+            />
           </div>
         )
-      }
-    ]
-  },
-  pixelArt: {
-    sprites: [
-      {
-        id: 'gavel',
-        src: '/pixel/gavel.png',
-        width: 16,
-        height: 16,
-        animation: {
-          duration: 2000,
-          loop: true,
-          autoplay: true
-        }
       }
     ]
   }
@@ -53,9 +50,11 @@ const introConfig: SceneConfig = {
 export function IntroScene() {
   const titleRef = useRef<HTMLDivElement>(null)
   const subtitleRef = useRef<HTMLDivElement>(null)
+  const gavelRef = useRef<HTMLDivElement>(null)
+  const avatarRef = useRef<HTMLDivElement>(null)
   const { reducedMotion } = useSideScrollerStore()
 
-  // Animate text elements
+  // Animate text elements and pixel sprites
   useSceneAnimation('intro', (progress: number) => {
     if (titleRef.current) {
       if (reducedMotion) {
@@ -76,11 +75,43 @@ export function IntroScene() {
         subtitleRef.current.style.transform = `translateY(${(1 - subtitleProgress) * 20}px)`
       }
     }
+
+    // Animate pixel sprites
+    if (gavelRef.current) {
+      const gavelProgress = Math.max(0, Math.min(1, (progress - 0.6) / 0.3))
+      gavelRef.current.style.opacity = gavelProgress.toString()
+      if (!reducedMotion) {
+        gavelRef.current.style.transform = `translateY(${(1 - gavelProgress) * 40}px) rotate(${gavelProgress * 15}deg)`
+      }
+    }
+
+    if (avatarRef.current) {
+      const avatarProgress = Math.max(0, Math.min(1, (progress - 0.7) / 0.2))
+      avatarRef.current.style.opacity = avatarProgress.toString()
+      if (!reducedMotion) {
+        avatarRef.current.style.transform = `translateX(${(1 - avatarProgress) * -30}px)`
+      }
+    }
   })
 
   return (
     <SceneBase config={introConfig}>
-      <div className="text-center space-y-8 max-w-4xl mx-auto px-8">
+      <div className="text-center space-y-8 max-w-4xl mx-auto px-8 relative">
+        {/* Pixel art decorations */}
+        <div
+          ref={gavelRef}
+          className="absolute -top-16 -right-16 opacity-0 transition-all duration-1000"
+        >
+          <GoldenGavel scale={3} className="drop-shadow-lg" />
+        </div>
+
+        <div
+          ref={avatarRef}
+          className="absolute -bottom-20 -left-16 opacity-0 transition-all duration-1000"
+        >
+          <AvatarIdle scale={4} className="drop-shadow-lg" />
+        </div>
+
         {/* Main title with stencil effect */}
         <div
           ref={titleRef}
@@ -116,9 +147,13 @@ export function IntroScene() {
           </div>
         </div>
 
-        {/* Scroll hint */}
+        {/* Scroll hint with pixel decoration */}
         <div className="absolute bottom-8 left-1/2 -translate-x-1/2 animate-bounce">
-          <div className="text-muted text-sm mb-2">SCROLL TO EXPLORE</div>
+          <div className="text-muted text-sm mb-2 flex items-center gap-2">
+            <div className="w-2 h-2 bg-gold pixel-crisp animate-pulse" />
+            SCROLL TO EXPLORE
+            <div className="w-2 h-2 bg-gold pixel-crisp animate-pulse" />
+          </div>
           <div className="w-1 h-8 bg-gradient-to-b from-gold to-transparent mx-auto" />
         </div>
       </div>
